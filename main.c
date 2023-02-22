@@ -7,22 +7,41 @@
 #define BUFFER_SIZE 29
 #define CHANCE 7
 
-// void insertsLetter( char *word, char letter, bool mistakesFlag)
-// {
-//     int lenWord = strlen(word);
-//     for (int k = 0; k <= lenWord - 1; k++)
-//     {
-//         if (word[k] == letter)
-//         {
-//             printf(" %c", letter);
-//             mistakesFlag = false;
-//         }
-//         else
-//         {
-//             printf(" __");
-//         }
-//     }
-// }
+void insertsLetter(char *word, char letter, bool *mistakeFlag, int hitCounterLetter, char *wordGuessed)
+{
+    int lenWord = strlen(word);
+    for (int k = 0; k <= lenWord - 1; k++)
+    { 
+        if (word[k] == letter)
+        {
+            wordGuessed[k] = word[k];
+            printf(" %c ", letter);
+            *mistakeFlag = false;
+            hitCounterLetter++;
+        }
+        else if (wordGuessed[k] == '_')
+        {
+            printf(" __");
+        }
+        else
+        {
+            printf("%c", wordGuessed[k]);
+        }
+    }
+    
+//     // for (int k = 0; k <= lenWord - 1; k++)
+//     // {
+//     //     if (word[k] == letter)
+//     //     {
+//     //         printf(" %c", letter);
+//     //         mistakesFlag = false;
+//     //     }
+//     //     else
+//     //     {
+//     //         printf(" __");
+//     //     }
+//     // }
+}
 
 void printBody(char *body, int mistakes)
 {
@@ -65,7 +84,14 @@ void printDashes(char *word)
     int lenWord = strlen(word);
     for (int i = 0; i < lenWord; i++)
     {
-        printf(" __");
+        if (word[i] == ' ')
+        {
+            printf("  ");
+        }
+        else
+        {
+            printf(" __");
+        }
     }
     printf("\n");
 }
@@ -77,9 +103,16 @@ void getWord(char *words, char ch, int len)
     while ((ch = getchar()) != '\n')
     {
         words[len] = ch;
-        
+
         len++;
-        printf("%c", '*');
+        if (words[len] == ' ')
+        {
+            printf(" ");
+        }
+        else
+        {
+            printf("%c", '*');
+        }
     }
     words[len] = '\0';
 }
@@ -88,13 +121,15 @@ int main(int argc, char *argv[])
 {
     char body[CHANCE] = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
     char wordGuessed[BUFFER_SIZE];
-    bool mistakesFlag = true;
+    bool mistakeFlag = true;
     int mistakes = 0;
     char letter;
     char word[BUFFER_SIZE];
     int hitCounterLetter = 0;
     int lenWord = 0;
     char ch;
+    char letterArray[CHANCE];
+    int i = 0;
 
     printf("\n\t Be aware you can be hanged!");
     printf("\n\n\t Rules : ");
@@ -105,63 +140,75 @@ int main(int argc, char *argv[])
     if (argc == 1)
     {
         getWord(word, ch, lenWord);
-        system("clear"); 
+        system("clear");
 
         lenWord = strlen(word);
+        
         memset(wordGuessed, '_', lenWord);
+
         // for (int i = 0; i <= lenWord; i++)
         // {
         //     printf("%c", word[i]);
         // }
+
         printf(" \n");
         printDashes(word);
-        while (mistakes <= 7)
+        while (mistakes < 7)
         {
             if (hitCounterLetter == lenWord)
             {
-               printf(" Congratulations, you WON  \n");
-               break;
+                printf(" Congratulations, you WON  \n");
+                break;
             }
-            
+
             printf("Enter letter would you like: \n");
             scanf("  %c", &letter);
             printf(" \n");
-
-            for (int k = 0; k <= lenWord - 1; k++)
+            letterArray[i] = letter;
+            i++;
+            for (int j = 0; j < i; j++)
             {
-                if (word[k] == letter)
-                {
-                    wordGuessed[k] = word[k];
-                    printf(" %c ", letter);
-                    mistakesFlag = false;
-                    hitCounterLetter++;
-                }
-                else if (wordGuessed[k] == '_')
-                {
-                    printf(" __");
-                }
-                else
-                {
-                    printf("%c", wordGuessed[k]);
-                }
+                printf(" %c", letterArray[j]);
             }
-            if (mistakesFlag == true)
+            printf(" \n");
+
+            insertsLetter(word, letter, &mistakeFlag, hitCounterLetter, wordGuessed);
+
+            // for (int k = 0; k <= lenWord - 1; k++)
+            // {
+            //     if (word[k] == letter)
+            //     {
+            //         wordGuessed[k] = word[k];
+            //         printf(" %c ", letter);
+            //         mistakeFlag = false;
+            //         hitCounterLetter++;
+            //     }
+            //     else if (wordGuessed[k] == '_')
+            //     {
+            //         printf(" __");
+            //     }
+            //     else
+            //     {
+            //         printf("%c", wordGuessed[k]);
+            //     }
+            // }
+
+            if (mistakeFlag == true)
             {
                 mistakes++;
-                printf("\a");
             }
-            mistakesFlag = true;
+            mistakeFlag = true;
             printBody(body, mistakes);
             printf(" \n");
         }
 
         if (mistakes > 7 || mistakes == 7)
         {
-            printf("GAME OVER");
+            printf("GAME OVER \n");
         }
     }
-    else 
+    else
     {
-        printf("Somting is wrong");
+        printf("Somting is wrong \n");
     }
 }
