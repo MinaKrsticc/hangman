@@ -7,40 +7,27 @@
 #define BUFFER_SIZE 29
 #define CHANCE 7
 
-void insertsLetter(char *word, char letter, bool *mistakeFlag, int hitCounterLetter, char *wordGuessed)
+void insertsLetter(char *word, char letter, bool *mistakeFlag, char *wordGuessed)
 {
     int lenWord = strlen(word);
     for (int k = 0; k <= lenWord - 1; k++)
-    { 
-        if (word[k] == letter)
+    {
+        if (word[k] == ' ')
+        {
+            printf("  ");
+        }
+        else if (word[k] == letter)
         {
             wordGuessed[k] = word[k];
-            printf(" %c ", letter);
+            printf(" %c", letter);
             *mistakeFlag = false;
-            hitCounterLetter++;
-        }
-        else if (wordGuessed[k] == '_')
-        {
-            printf(" __");
         }
         else
         {
-            printf("%c", wordGuessed[k]);
+            printf(" %c", wordGuessed[k]);
         }
     }
-    
-//     // for (int k = 0; k <= lenWord - 1; k++)
-//     // {
-//     //     if (word[k] == letter)
-//     //     {
-//     //         printf(" %c", letter);
-//     //         mistakesFlag = false;
-//     //     }
-//     //     else
-//     //     {
-//     //         printf(" __");
-//     //     }
-//     // }
+    printf("\n");
 }
 
 void printBody(char *body, int mistakes)
@@ -103,18 +90,32 @@ void getWord(char *words, char ch, int len)
     while ((ch = getchar()) != '\n')
     {
         words[len] = ch;
-
-        len++;
         if (words[len] == ' ')
         {
-            printf(" ");
+            printf(" %c", ' ');
         }
         else
         {
-            printf("%c", '*');
+            printf(" %c", '*');
+        }
+        len++;
+    }
+    printf("\n");
+    words[len] = '\0';
+}
+
+int counterBlank(char *words)
+{
+    int hitCounterLetter = 0;
+    int lenWord = strlen(words);
+    for (int k = 0; k <= lenWord - 1; k++)
+    {
+        if (words[k] == ' ')
+        {
+            hitCounterLetter++;
         }
     }
-    words[len] = '\0';
+    return hitCounterLetter;
 }
 
 int main(int argc, char *argv[])
@@ -143,16 +144,12 @@ int main(int argc, char *argv[])
         system("clear");
 
         lenWord = strlen(word);
-        
-        memset(wordGuessed, '_', lenWord);
 
-        // for (int i = 0; i <= lenWord; i++)
-        // {
-        //     printf("%c", word[i]);
-        // }
+        memset(wordGuessed, '_', lenWord);
 
         printf(" \n");
         printDashes(word);
+        hitCounterLetter = counterBlank(word);
         while (mistakes < 7)
         {
             if (hitCounterLetter == lenWord)
@@ -163,6 +160,7 @@ int main(int argc, char *argv[])
 
             printf("Enter letter would you like: \n");
             scanf("  %c", &letter);
+
             printf(" \n");
             letterArray[i] = letter;
             i++;
@@ -172,31 +170,21 @@ int main(int argc, char *argv[])
             }
             printf(" \n");
 
-            insertsLetter(word, letter, &mistakeFlag, hitCounterLetter, wordGuessed);
+            insertsLetter(word, letter, &mistakeFlag, wordGuessed);
 
-            // for (int k = 0; k <= lenWord - 1; k++)
-            // {
-            //     if (word[k] == letter)
-            //     {
-            //         wordGuessed[k] = word[k];
-            //         printf(" %c ", letter);
-            //         mistakeFlag = false;
-            //         hitCounterLetter++;
-            //     }
-            //     else if (wordGuessed[k] == '_')
-            //     {
-            //         printf(" __");
-            //     }
-            //     else
-            //     {
-            //         printf("%c", wordGuessed[k]);
-            //     }
-            // }
+            for (int k = 0; k <= lenWord - 1; k++)
+            {
+                if (word[k] == letter)
+                {
+                    hitCounterLetter++;
+                }
+            }
 
             if (mistakeFlag == true)
             {
                 mistakes++;
             }
+    
             mistakeFlag = true;
             printBody(body, mistakes);
             printf(" \n");
