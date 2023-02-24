@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define _CONIO_H_
 #define BUFFER_SIZE 29
 #define CHANCE 7
 
@@ -104,7 +103,7 @@ void getWord(char *words, char ch, int len)
     words[len] = '\0';
 }
 
-int counterBlank(char *words)
+int countBlank(char *words)
 {
     int hitCounterLetter = 0;
     int lenWord = strlen(words);
@@ -118,18 +117,41 @@ int counterBlank(char *words)
     return hitCounterLetter;
 }
 
+int countCorectLetters(char *words, char letter)
+{
+    int hitCounterLetter = 0;
+    int lenWord = strlen(words);
+    for (int k = 0; k <= lenWord - 1; k++)
+    {
+        if (words[k] == letter)
+        {
+            hitCounterLetter++;
+        }
+    }
+    return hitCounterLetter;
+}
+
+void printLetterArray(char *letterArray, int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        printf(" %c", letterArray[i]);
+    }
+    printf(" \n");
+}
+
 int main(int argc, char *argv[])
 {
     char body[CHANCE] = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
-    char wordGuessed[BUFFER_SIZE];
+    char wordGuessed[BUFFER_SIZE]; //slova koja su pogodjena
     bool mistakeFlag = true;
     int mistakes = 0;
     char letter;
-    char word[BUFFER_SIZE];
+    char word[BUFFER_SIZE]; //rec koja je zadata
     int hitCounterLetter = 0;
     int lenWord = 0;
     char ch;
-    char letterArray[CHANCE];
+    char letterArray[BUFFER_SIZE]; //sva slova koja se nagadjaju
     int i = 0;
 
     printf("\n\t Be aware you can be hanged!");
@@ -144,12 +166,11 @@ int main(int argc, char *argv[])
         system("clear");
 
         lenWord = strlen(word);
-
         memset(wordGuessed, '_', lenWord);
 
         printf(" \n");
         printDashes(word);
-        hitCounterLetter = counterBlank(word);
+        hitCounterLetter = countBlank(word);
         while (mistakes < 7)
         {
             if (hitCounterLetter == lenWord)
@@ -160,25 +181,14 @@ int main(int argc, char *argv[])
 
             printf("Enter letter would you like: \n");
             scanf("  %c", &letter);
-
             printf(" \n");
             letterArray[i] = letter;
             i++;
-            for (int j = 0; j < i; j++)
-            {
-                printf(" %c", letterArray[j]);
-            }
-            printf(" \n");
+            printLetterArray(letterArray, i);
 
             insertsLetter(word, letter, &mistakeFlag, wordGuessed);
 
-            for (int k = 0; k <= lenWord - 1; k++)
-            {
-                if (word[k] == letter)
-                {
-                    hitCounterLetter++;
-                }
-            }
+            hitCounterLetter = hitCounterLetter + countCorectLetters(word, letter);
 
             if (mistakeFlag == true)
             {
