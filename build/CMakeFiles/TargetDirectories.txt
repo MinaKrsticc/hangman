@@ -1,3 +1,0 @@
-/home/syrmia/hangman/build/CMakeFiles/rebuild_cache.dir
-/home/syrmia/hangman/build/CMakeFiles/edit_cache.dir
-/home/syrmia/hangman/build/CMakeFiles/main.dir
